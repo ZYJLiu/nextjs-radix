@@ -1,30 +1,36 @@
 import { Button, Flex, Heading, Text } from "@radix-ui/themes";
 import NextLink from "next/link";
-import { getUser } from "../auth";
+import { createClient } from "@/utils/supabase-auth/server";
 
 export default async function Home() {
-  const { isAuthenticated, user } = await getUser();
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <Flex direction="column" align="center" gap="2">
-      {isAuthenticated ? (
+      {user ? (
         <>
           <Heading size="8">
-            Welcome back{user?.firstName && `, ${user?.firstName}`}
+            Welcome back
+            {user.user_metadata?.full_name &&
+              `, ${user.user_metadata?.full_name}`}
           </Heading>
           <Text size="5" color="gray">
             You are now authenticated into the application
           </Text>
           <Flex align="center" gap="3" mt="4">
-            <Button asChild size="3" variant="soft">
-              <NextLink href="/account">View account</NextLink>
-            </Button>
+            {/* <Button asChild size="3" variant="soft">
+              <NextLink href="/">View account</NextLink>
+            </Button> */}
           </Flex>
         </>
       ) : (
         <>
-          <Heading size="8">AuthKit</Heading>
+          <Heading size="8">Supabase Auth</Heading>
           <Text size="5" color="gray" mb="4">
-            Sign In
+            Sign In with GitHub
           </Text>
         </>
       )}

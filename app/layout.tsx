@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import { Container, Flex, Theme } from "@radix-ui/themes";
-import Navbar from "./components/navbar";
+import Navbar from "../components/navbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,24 +1,36 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getAuthorizationUrl, verifyJwtToken } from "./auth";
+import { NextResponse, type NextRequest } from "next/server";
+import { createClient } from "@/utils/supabase-auth/middleware";
 
 export async function middleware(request: NextRequest) {
-  const { cookies } = request;
-  const { value: token } = cookies.get("token") ?? { value: null };
+  try {
+    const { supabase, response } = createClient(request);
 
-  const hasVerifiedToken = token && (await verifyJwtToken(token));
-
-  // Redirect unauthenticated users to the AuthKit flow
-  if (!hasVerifiedToken) {
-    const authorizationUrl = await getAuthorizationUrl();
-    const response = NextResponse.redirect(authorizationUrl);
-
-    response.cookies.delete("token");
+    // Refresh session if expired - required for Server Components
+    // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#managing-session-with-middleware
+    await supabase.auth.getSession();
 
     return response;
+  } catch (e) {
+    // If you are here, a Supabase client could not be created!
+    // This is likely because you have not set up environment variables.
+    // Check out http://localhost:3000 for Next Steps.
+    return NextResponse.next({
+      request: {
+        headers: request.headers,
+      },
+    });
   }
-
-  return NextResponse.next();
 }
 
-// Match against the account page
-export const config = { matcher: ["/account/:path*"] };
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
+     */
+    "/((?!_next/static|_next/image|favicon.ico).*)",
+  ],
+};
