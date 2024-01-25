@@ -5,6 +5,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 export default async function SignIn() {
+  console.log(getURL());
   const supabase = createClient();
   return (
     <div className="flex flex-col space-y-4">
