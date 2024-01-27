@@ -55,7 +55,7 @@ export async function POST(req: Request) {
             );
             console.log("Update Subscription", dbUserId);
           } catch (error) {
-            console.error("Error inserting user:", error);
+            console.error("Error updating subscription:", error);
           }
 
           break;

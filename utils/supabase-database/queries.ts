@@ -20,6 +20,11 @@ export async function insertUser(newUser: Users): Promise<Users[]> {
   return insertedUser;
 }
 
+export async function getUserById(userId: string) {
+  const user = await db.select().from(users).where(eq(users.id, userId));
+  return user;
+}
+
 export async function updateSubscriptionDetails(
   email: string,
   stripeCustomerId: string,

@@ -1,7 +1,7 @@
-import { Button, Flex, Heading, Text } from "@radix-ui/themes";
-import NextLink from "next/link";
+import { Flex, Heading, Text } from "@radix-ui/themes";
 import { createClient } from "@/utils/supabase-auth/server";
 import SubscriptionCard from "@/components/subscription-card";
+import SubscriptionDetail from "@/components/subscription-detail";
 
 export default async function Home() {
   const supabase = createClient();
@@ -21,8 +21,9 @@ export default async function Home() {
           <Text size="5" color="gray">
             You are now authenticated into the application
           </Text>
-          <Flex align="center" gap="3" mt="4">
+          <Flex direction="column" align="center" gap="3" mt="4">
             <SubscriptionCard />
+            <SubscriptionDetail />
           </Flex>
         </>
       ) : (
