@@ -1,8 +1,7 @@
 import type { Stripe } from "stripe";
-
-import { NextResponse } from "next/server";
-
 import { stripe } from "@/utils/stripe/stripe";
+import { NextResponse } from "next/server";
+import { updateSubscriptionDetails } from "@/utils/supabase-database/queries";
 
 export async function POST(req: Request) {
   let event: Stripe.Event;
@@ -41,6 +40,24 @@ export async function POST(req: Request) {
         case "checkout.session.completed":
           data = event.data.object as Stripe.Checkout.Session;
           console.log(`💰 CheckoutSession status: ${data.payment_status}`);
+
+          // fetch subscription details
+          const subscription = await stripe.subscriptions.retrieve(
+            data.subscription as string
+          );
+
+          try {
+            const dbUserId = await updateSubscriptionDetails(
+              data.customer_email as string,
+              data.customer as string,
+              subscription.id,
+              subscription.current_period_end
+            );
+            console.log("Update Subscription", dbUserId);
+          } catch (error) {
+            console.error("Error inserting user:", error);
+          }
+
           break;
         case "payment_intent.payment_failed":
           data = event.data.object as Stripe.PaymentIntent;

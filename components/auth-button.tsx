@@ -12,8 +12,6 @@ export default async function AuthButton() {
   } = await supabase.auth.getUser();
 
   if (user) {
-    // console.log(user);
-
     const newUser = {
       id: user.id,
       email: user.email ?? null,
@@ -21,11 +19,14 @@ export default async function AuthButton() {
       userName: user.user_metadata?.user_name ?? null,
       createdAt: user.created_at ?? null,
       updatedAt: user.updated_at ?? null,
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      subscriptionEnd: null,
     };
 
     try {
       const insertedUser = await insertUser(newUser);
-      console.log("User inserted:", insertedUser);
+      // console.log("User inserted:", insertedUser);
     } catch (error) {
       console.error("Error inserting user:", error);
     }

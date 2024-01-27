@@ -1,5 +1,5 @@
 {
-  "id": "27f85c72-cce1-42b5-8f4c-4e62aa06c5f7",
+  "id": "3026405b-2683-497f-a4e5-5eec320bbda4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -41,6 +41,24 @@
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripe_customer_id": {
+          "name": "stripe_customer_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripe_subscription_id": {
+          "name": "stripe_subscription_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subscription_end": {
+          "name": "subscription_end",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
